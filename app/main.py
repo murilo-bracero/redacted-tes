@@ -24,6 +24,6 @@ app = FastAPI(lifespan=lifespan) # type: ignore
 
 app.include_router(imoveis.router)
 
-@app.get("/health")
+@app.get("/health", tags=["devops"])
 async def health() -> Dict[str, str]:
     return {"status": "ok"}
