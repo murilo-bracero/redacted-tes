@@ -3,6 +3,7 @@ services:
   redacted-tes:
     depends_on:
       - db
+      - migrations
     build:
       context: ../
       dockerfile: ./deployments/Dockerfile
@@ -15,6 +16,25 @@ services:
       - DB_NAME=postgres
     ports:
       - "8080:80"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 512M
+  
+  migrations:
+    depends_on:
+      - db
+    build:
+      context: ../
+      dockerfile: ./deployments/migrations.Dockerfile
+    environment:
+      - ENV=prd
+      - DB_USER=postgres
+      - DB_PASSWORD=postgrespw
+      - DB_HOST=db.internal
+      - DB_PORT=5432
+      - DB_NAME=postgres
     deploy:
       resources:
         limits:
