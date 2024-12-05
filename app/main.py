@@ -9,12 +9,13 @@ if getenv("ENV") != "prd":
 
 from fastapi import FastAPI
 
-from app.internal.db import session_manager
+from app.internal.db import DatabaseSessionManager
 from app.routers import imoveis
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     yield 
+    session_manager = DatabaseSessionManager.create()
     if session_manager.engine is not None:
         await session_manager.close()
 

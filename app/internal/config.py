@@ -23,7 +23,12 @@ class Config:
     db_url: Optional[str] = field(default=None)
 
     def __post_init__(self):
-        # create a database URL using psycopg
-        self.db_url = f"postgresql+psycopg://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
+        env_db_url = getenv("DB_URL")
+
+        if env_db_url is None or env_db_url == "":
+            self.db_url = f"postgresql+psycopg://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
+            return
+        
+        self.db_url = env_db_url
 
 config = Config()

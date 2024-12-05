@@ -12,14 +12,24 @@ class DatabaseSessionManager:
     sessões on-demand para as rotas conforme forem solicitadas pelas 
     requisições.
     """
+    __instance = None
+
+    @staticmethod
+    def create() -> "DatabaseSessionManager":
+        if DatabaseSessionManager.__instance is None:
+            DatabaseSessionManager.__instance = DatabaseSessionManager(config)
+        return DatabaseSessionManager.__instance
 
     def __init__(self, config: Config) -> None:
+        if DatabaseSessionManager.__instance is not None:
+            return
+        
         if config.db_url is None:
             raise ValueError("Database URL is not set")
 
         self._engine = create_async_engine(config.db_url)
         self._session_factory = async_sessionmaker(autocommit=False, bind=self._engine)
-    
+
     @property
     def engine(self) -> Optional[AsyncEngine]:
         return self._engine
@@ -52,7 +62,6 @@ class DatabaseSessionManager:
                 yield conn
             finally:
                 await conn.close()
-                raise
     
     @asynccontextmanager
     async def session(self) -> AsyncIterator[AsyncSession]:
@@ -76,12 +85,10 @@ class DatabaseSessionManager:
         finally:
             await session.close()
 
-session_manager = DatabaseSessionManager(config)
-
 async def get_db_session():
     """
     Cria uma seção assíncrona para o banco de dados para 
     uma operação e a finaliza ao final da mesma.
     """
-    async with session_manager.session() as session:
+    async with DatabaseSessionManager.create().session() as session:
         yield session
