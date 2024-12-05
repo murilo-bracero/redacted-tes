@@ -14,6 +14,7 @@ class Config:
         db_host: database host
         db_port: database port
         db_name: database name
+        db_url: database url (optional)
     """
     db_user: Optional[str] = field(default=getenv("DB_USER"))
     db_password: Optional[str] = field(default=getenv("DB_PASSWORD"))
