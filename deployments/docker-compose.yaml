@@ -40,4 +40,4 @@ services:
 networks:
   default:
     external: false
-    name: spellscan-network
+    name: redacted-tes-network

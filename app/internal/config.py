@@ -6,7 +6,7 @@ from typing import Optional
 @dataclass
 class Config:
     """
-    Application configuration
+    Classe responsável por armazenar as configurações do app
 
     Attributes:
         db_user: database user

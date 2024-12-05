@@ -1,6 +1,7 @@
 from os import getenv
 
 from contextlib import asynccontextmanager
+from typing import Dict
 from dotenv import load_dotenv
 
 if getenv("ENV") != "prd":
@@ -23,5 +24,5 @@ app = FastAPI(lifespan=lifespan) # type: ignore
 app.include_router(imoveis.router)
 
 @app.get("/health")
-async def health():
+async def health() -> Dict[str, str]:
     return {"status": "ok"}

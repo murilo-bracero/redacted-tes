@@ -1,31 +1,24 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class CreatePropertyRequest(BaseModel):
-    value: float
-    zip_code: str
-    number: int
+    value: float = Field(ge=0)
     buyer: "CreateBuyerRequest"
 
 class CreateBuyerRequest(BaseModel):
-    name: str
-    credit_score: float
-    wage: float
+    credit_score: float = Field(alias="creditScore", ge=0, le=1000)
+    estimated_income: float = Field(alias="estimatedIncome", ge=0)
 
 class CreatePropertyResponse(BaseModel):
     id: int
 
 class DealBuyerResponse(BaseModel):
     id: int
-    nome: str
-    credit_score: float
-    wage: float
+    credit_score: float = Field(serialization_alias="creditScore")
+    estimated_income: float = Field(serialization_alias="estimatedIncome")
 
 class DealPropertyResponse(BaseModel):
     id: int
-    zip_code: str
-    number: int
     value: float
-    public_place: str
 
 class DealResponse(BaseModel):
     id: int
